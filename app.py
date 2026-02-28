@@ -100,7 +100,8 @@ def update_result_error(message):
     condition_label.configure(text=message)
     details_label.configure(text="")
     search_button.configure(state="normal")
-
+   
+   
 
 title_label=ctk.CTkLabel(app, 
                          text="Weather Assistant", 
