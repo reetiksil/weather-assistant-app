@@ -33,7 +33,7 @@ def get_weather(city):
     try:
         r = requests.get(url, timeout=5)
     except requests.exceptions.RequestException:
-        result["message"] = "Network error! Please check your internet connection."
+        result["message"] = "Network error! \nPlease check your internet connection."
         return result
 
     if r.status_code != 200:
