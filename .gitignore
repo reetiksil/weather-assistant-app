@@ -1,3 +1,5 @@
 venv/
 .env
 __pycache__/
+weather.mp3
+preview.mp3
