@@ -7,6 +7,8 @@ import os
 import pygame
 from PIL import Image
 from datetime import datetime
+import warnings
+warnings.filterwarnings("ignore", message=".*CTkLabel Warning.*")
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
@@ -97,6 +99,12 @@ settings_icon=ctk.CTkImage(
     dark_image=Image.open("assets/icons/settings2.png"),
     size=(30,30)
 )
+stop_icon=ctk.CTkImage(
+    light_image=Image.open("assets/icons/stop2.png"),
+    dark_image=Image.open("assets/icons/stop.png"),
+    size=(30,30)
+)
+
 pygame.mixer.init()
 
 async def voice_generator(text, voice, filename="weather.mp3"):
@@ -134,12 +142,15 @@ def open_settings():
         border_width=1,
         border_color="#2f2f2f"
     )
-    
-    # position near the gear icon
+
     settings_panel.place(x=20, y=70)
     settings_panel.pack_propagate(False)
-    settings_panel.grab_set() 
-    # close button
+    settings_panel.grab_set()
+
+    def close_settings():
+        settings_panel.grab_release()
+        settings_panel.destroy()
+
     close_button = ctk.CTkButton(
         settings_panel,
         text="✕",
@@ -148,19 +159,18 @@ def open_settings():
         corner_radius=13,
         fg_color="transparent",
         hover_color="#333333",
-        command=settings_panel.destroy
+        command=close_settings
     )
     close_button.place(relx=1.0, x=-8, y=8, anchor="ne")
 
-    # title
+    
     title = ctk.CTkLabel(
         settings_panel,
         text="Settings",
         font=ctk.CTkFont(size=14, weight="bold")
     )
-    title.pack(pady=(5, 5))
+    title.pack(pady=(5,5))
 
-    # toggle
     def voice_toggle():
         global voice_enabled
         voice_enabled = voice_switch.get()
@@ -177,10 +187,9 @@ def open_settings():
     else:
         voice_switch.deselect()
 
-
+    # voice selection
     def change_voice(choice):
         global selected_voice
-
         selected_voice = voice_packs[choice]
 
         threading.Thread(
@@ -190,28 +199,26 @@ def open_settings():
         ).start()
 
     voice_menu = ctk.CTkOptionMenu(
-    settings_panel,
-    values=list(voice_packs.keys()),
-    command=change_voice
+        settings_panel,
+        values=list(voice_packs.keys()),
+        command=change_voice
     )
-
     voice_menu.pack(pady=(0,10))
     voice_menu.set("Select Voice Pack")
 
-        
+    # speech speed
     def change_speed(choice):
         global tts_rate
         tts_rate = speed_rates[choice]
-        
-    speech_speed = ctk.CTkOptionMenu(
-    settings_panel,
-    values=list(speed_rates.keys()),
-    command=change_speed
-    )
 
+    speech_speed = ctk.CTkOptionMenu(
+        settings_panel,
+        values=list(speed_rates.keys()),
+        command=change_speed
+    )
     speech_speed.pack()
+
     speech_speed.set("Normal")
-   
 
 def search():
     if current_sound and pygame.mixer.get_busy():
@@ -314,7 +321,7 @@ def fetch_weather(city):
        
         if voice_enabled:
             try:
-                asyncio.run(voice_generator(speech_text))
+                asyncio.run(voice_generator(speech_text, selected_voice))
             except Exception as e:
                 print("TTS generation failed:", e)
                 return
@@ -327,6 +334,9 @@ def fetch_weather(city):
 
                     current_sound = pygame.mixer.Sound("weather.mp3")
                     current_sound.play()
+                    current_sound.play()
+                    check_audio_finished()
+                    search_button.configure(image=stop_icon, command=stop_audio)
                 except Exception as e:
                     print("Audio playback failed:", e)
             else:
@@ -504,11 +514,12 @@ def search_city(city):
     city_entry.insert(0, city)
     search()
 
-for city in ["Delhi", "Mumbai", "London", "Tokyo"]:
+for city in ["Tezpur,\nIndia", "Guwahati,\nIndia", "Jorhat,\nIndia", "Delhi,\nIndia"]:
     btn = ctk.CTkButton(
         cities_frame,
         text=city,
         height=30,
+        width=120,
         corner_radius=15,
         text_color="#888888",
         fg_color="#1f1f1f",
@@ -528,6 +539,23 @@ search_container = ctk.CTkFrame(
 )
 search_container.pack(padx=25, fill="x")
 search_container.pack_propagate(False)
+
+
+def check_audio_finished():
+    if not pygame.mixer.get_busy():
+        search_button.configure(image=search_icon, command=search)
+    else:
+        app.after(500, check_audio_finished)
+
+def stop_audio():
+    global current_sound
+
+    if pygame.mixer.get_busy():
+        pygame.mixer.stop()
+
+
+    search_button.configure(image=search_icon, command=search)
+
 
 mic_button = ctk.CTkButton(
     search_container,
@@ -569,9 +597,14 @@ def on_close():
     try:
         if current_sound and pygame.mixer.get_busy():
             pygame.mixer.stop()
+
         if os.path.exists("weather.mp3"):
             os.remove("weather.mp3")
-    except:
+
+        if os.path.exists("preview.mp3"):
+            os.remove("preview.mp3")
+
+    except Exception:
         pass
     app.destroy()
 app.protocol("WM_DELETE_WINDOW", on_close)
