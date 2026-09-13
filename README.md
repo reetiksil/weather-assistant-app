@@ -1,115 +1,213 @@
-# Weather Assistant Desktop Application
+# 🌦️ Weather Assistant Desktop Application
 
-A modern Python-based Weather Assistant built using CustomTkinter*.
-This desktop application provides real-time weather updates with natural voice output using Microsoft Edge TTS, along with secure API key management through environment variables.
+A modern **Python-based desktop Weather Assistant** built with **CustomTkinter**. The application fetches real-time weather information using a weather API and provides natural voice-based weather announcements using **Microsoft Edge TTS**.
 
-Designed as a structured, modular desktop application following clean development practices.
-
----
-
-## Features
-
-* 🌍 Real-time weather data using Weather API
-* 🎨 Modern GUI built with CustomTkinter
-* 🔊 Natural Text-to-Speech output using Edge TTS
-* 🎵 Audio playback handled with Pygame
-* 🔐 Secure API key storage using `.env`
-* ⚠️ Error handling for invalid city inputs
-* 🧱 Modular and maintainable code structure
+The project follows a **modular and structured architecture**, with secure API key management through environment variables and dedicated modules for handling weather data and application logic.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ Features
 
-* Python 3.x
-* CustomTkinter
-* Requests
-* Edge-TTS
-* Pygame
-* python-dotenv
+* 🌍 **Real-time Weather Data** — Get current weather information for any city.
+* 🎨 **Modern GUI** — Clean and responsive desktop interface built with CustomTkinter.
+* 🔊 **Text-to-Speech** — Converts weather information into natural-sounding speech using Microsoft Edge TTS.
+* 🎵 **Audio Playback** — Plays generated speech using Pygame.
+* 🔐 **Secure API Key Management** — API credentials are stored in a `.env` file and excluded from version control.
+* ⚠️ **Error Handling** — Handles invalid city names and API-related errors.
+* 🧱 **Modular Architecture** — Separates application interface and weather API functionality for easier maintenance.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology        | Purpose                         |
+| ----------------- | ------------------------------- |
+| **Python 3.x**    | Core programming language       |
+| **CustomTkinter** | Modern desktop GUI              |
+| **Requests**      | Weather API requests            |
+| **Edge-TTS**      | Text-to-speech generation       |
+| **Pygame**        | Audio playback                  |
+| **python-dotenv** | Environment variable management |
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 weather-assistant-app/
 │
-├── app.py                # Entry point of the application
-├── requirements.txt      # Project dependencies
-├── README.md
-├── .gitignore
-├── .env                  # Not included in repository (contains API key)
-├── weather_api.py        # Module to fetch weather data
-└── venv/                 # Local virtual environment (not uploaded)
-
+├── app.py                # Main application and GUI
+├── weather_api.py        # Weather API functionality
+├── requirements.txt      # Python dependencies
+├── README.md             # Project documentation
+├── .gitignore            # Git ignored files
+├── .env                  # API key (not included in repository)
+└── venv/                 # Virtual environment (not included)
+```
 
 ---
-# Installation & Setup
 
-## 1️ Clone the Repository
+## 🚀 Installation & Setup
 
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/reetiksil/weather-assistant-app.git
+```
 
+Navigate to the project directory:
+
+```bash
 cd weather-assistant-app
+```
 
-### 2️ Create a Virtual Environment (Recommended)
+---
 
+### 2. Create a Virtual Environment
+
+Creating a virtual environment is recommended to keep project dependencies isolated.
+
+```bash
 python -m venv venv
+```
 
-### 3️ Activate the Virtual Environment
+---
 
- #### For Windows: 
+### 3. Activate the Virtual Environment
 
+#### Windows
+
+```bash
 venv\Scripts\activate
+```
 
- #### For Mac/Linux:
+#### macOS / Linux
 
+```bash
 source venv/bin/activate
+```
 
+---
 
-### 4️ Install Dependencies
+### 4. Install Dependencies
 
+Install all required Python packages:
+
+```bash
 pip install -r requirements.txt
+```
 
+---
 
-### 5️ Create a `.env` File
+### 5. Configure the API Key
 
-Inside the project root directory, create a file named:
+Create a file named `.env` in the project's root directory:
 
+```text
 .env
+```
 
-Add your Weather API key inside it:
+Add your weather API key:
 
+```env
 WEATHER_API_KEY=your_api_key_here
+```
 
+> **Important:** Never commit your `.env` file to GitHub. Make sure `.env` is included in your `.gitignore` file to prevent accidentally exposing your API key.
 
-### 6️ Run the Application
+---
 
+### 6. Run the Application
+
+Start the application with:
+
+```bash
 python app.py
+```
 
-The GUI will launch and you can search for any city to get:
+The Weather Assistant GUI will launch, allowing you to search for a city and retrieve information such as:
 
-* Temperature
-* Weather conditions
-* Voice-based weather announcement
+* 🌡️ Temperature
+* 🌤️ Current weather conditions
+* 🔊 Voice-based weather announcement
 
+---
+
+## 🔄 How It Works
+
+The application follows a simple workflow:
+
+```text
+User enters city
+       ↓
+Application sends request
+       ↓
+Weather API
+       ↓
+Weather data received
+       ↓
+Information displayed in GUI
+       ↓
+Weather summary converted to speech
+       ↓
+Audio played using Pygame
+```
+
+---
+
+## 🔐 Security
+
+The project uses environment variables to keep the API key separate from the source code.
+
+The API key is stored in:
+
+```text
+.env
+```
+
+and accessed through `python-dotenv`.
+
+The `.env` file should **never be uploaded to GitHub**.
+
+Example `.gitignore`:
+
+```gitignore
+.env
+venv/
+__pycache__/
+*.pyc
+```
+
+---
 
 ## 🔮 Future Improvements
 
+Potential improvements include:
+
 * 🎤 Voice-based city search
-* 📦 Convert application to standalone executable (.exe)
+* 📦 Packaging the application as a standalone `.exe`
 * 🌗 Light/Dark theme toggle
-* 🌎 Multi-language support
-* 📊 Extended weather details (wind speed, pressure, forecast)
+* 🌎 Multi-language voice output
+* 📊 Extended weather information
 
+  * Wind speed
+  * Atmospheric pressure
+  * Humidity
+  * Visibility
+  * Forecast data
+* 📅 Multi-day weather forecasts
+* 📍 Automatic location-based weather detection
 
-##  License
+---
 
-This project is created for educational and learning purposes.
+## 📜 License
 
+This project was created for **educational and learning purposes**
 
-## 👩 Author
+---
 
-Developed as part of MCA Minor Project and personal development practice.
-Focused on building structured, modular desktop applications using Python.
+## 👨‍💻 Author
+
+**Reetik Sil**
+
+Developed as part of personal development practice, with a focus on building structured and modular Python desktop applications.
